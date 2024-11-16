@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Document</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'MyApp/style.css' %}"/>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <h1> Chatbot App </h1>
+
+        <div id='chatbot'>
+            <p class='botText'><span> Hi There </span></p>
+        </div>
+
+        <div id= 'userInput'>
+            <input type ='text' id= 'textInput' name = 'userMessage' placeholder ='Type Your Message Here...'/>
+            <input type='submit' value = 'Send' id= 'buttonInput'/>
+        </div>
+        
+        <script>
+            function getUserResponse(){
+                var userText = $('#textInput').val();
+                //whatever the user types, it shows in the userText box
+                var userHTML = "<p class ='userText'> User: <span> " + userText + " </span></p>";
+
+                //remove it from the textInput box
+                $('#textInput').val("");
+                $('#chatbot').append(userHTML);
+
+                //ajax request to get the data
+
+                $.get('/getResponse',{userMessage: userText}).done(    //(the url, the data we want to send to the backend key:value)
+                    function(data){
+                        var returnedData = "<p class = 'botText' >Chatbot:<span> " + data + " </span> </p>";
+                        $('#chatbot').append(returnedData);
+                        console.log(data);
+                        console.log(returnedData);
+                    }
+                ) 
+                //userText is the text the user types in the box, userMessage is the key for it
+                //done() return the status of the call whether its successful or not
+            }   
+
+            //add a listener to the send button
+            $('#buttonInput').click(function(){
+                getUserResponse();
+            })
+
+
+        </script>
+
+    </body>
+</html>
